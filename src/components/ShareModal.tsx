@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { X, Link, Code } from 'lucide-react';
 
@@ -8,10 +9,10 @@ interface ShareModalProps {
 
 export function ShareModal({ formId, onClose }: ShareModalProps) {
   const [copied, setCopied] = useState<'link' | 'embed' | null>(null);
-
-  const formUrl = `${window.location.origin}/form/${formId}`;
+  
+  // Create a direct preview URL that shows only the form for users to fill out
   const previewUrl = `${window.location.origin}/form/${formId}?respondent=true`;
-  const embedCode = `<iframe src="${formUrl}" width="100%" height="600" frameborder="0" allow="clipboard-write"></iframe>`;
+  const embedCode = `<iframe src="${previewUrl}" width="100%" height="600" frameborder="0" allow="clipboard-write"></iframe>`;
 
   const copyToClipboard = async (text: string, type: 'link' | 'embed') => {
     await navigator.clipboard.writeText(text);
@@ -57,8 +58,9 @@ export function ShareModal({ formId, onClose }: ShareModalProps) {
 
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Embed Code
+              Embed on your website
             </label>
+            <p className="text-sm text-gray-500 mb-2">Add this code to your HTML to embed the form</p>
             <div className="flex gap-2">
               <input
                 type="text"
