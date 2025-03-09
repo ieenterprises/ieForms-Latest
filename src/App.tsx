@@ -4,10 +4,9 @@ import { parseQuestions } from './utils/questionParser';
 import { calculateProgress } from './utils/progressCalculator';
 import { FormField } from './components/FormField';
 import { QuestionEditor } from './components/QuestionEditor';
-import { ShareModal } from './components/ShareModal';
 import { Analytics } from './components/Analytics';
 import { Settings } from './components/Settings';
-import { FileText, Send, Plus, Share2, PencilLine, Eye, BarChart, ArrowLeft, Trash2, Settings as SettingsIcon, CheckCircle, XCircle } from 'lucide-react';
+import { FileText, Send, Plus, PencilLine, Eye, BarChart, ArrowLeft, Trash2, Settings as SettingsIcon, CheckCircle, XCircle } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/theme.css';
@@ -30,7 +29,6 @@ function App() {
   const [currentForm, setCurrentForm] = useState<FormData | null>(null);
   const [responses, setResponses] = useState<Record<string, string | string[] | number | Date>>({});
   const [view, setView] = useState<'list' | 'input' | 'editor' | 'preview' | 'analytics' | 'settings' | 'confirmation'>('list');
-  const [showShareModal, setShowShareModal] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState<string | null>(null);
   const [draggedQuestionIndex, setDraggedQuestionIndex] = useState<number | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string>('');
@@ -323,13 +321,6 @@ function App() {
                 >
                   <SettingsIcon className="w-4 h-4" />
                   Settings
-                </button>
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Share
                 </button>
               </div>
             )}
@@ -630,12 +621,7 @@ What is your Age Range? 15-19 years, 20-24 years, 25-29 years"
             </div>
           )}
 
-          {showShareModal && currentForm && (
-            <ShareModal
-              formId={currentForm.id}
-              onClose={() => setShowShareModal(false)}
-            />
-          )}
+          
 
           {showDeleteConfirm && (
             <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
