@@ -44,8 +44,9 @@ function App() {
     const urlParams = new URLSearchParams(location.search);
     const viewParam = urlParams.get('view');
     const formIdParam = urlParams.get('formId');
+    const isRespondent = urlParams.get('respondent') === 'true';
     
-    if (viewParam === 'preview' && formIdParam) {
+    if ((viewParam === 'preview' || isRespondent) && formIdParam) {
       const foundForm = forms.find(form => form.id === formIdParam);
       if (foundForm) {
         setCurrentForm(foundForm);
@@ -227,10 +228,19 @@ function App() {
           setCurrentForm(foundForm);
           setView('preview');
           setResponses({});
+          
+          // If this is a respondent view, hide the header UI
+          const isRespondent = location.search.includes('respondent=true');
+          if (isRespondent) {
+            // We're in respondent mode - form filling only
+            document.body.classList.add('respondent-view');
+          } else {
+            document.body.classList.remove('respondent-view');
+          }
         }
       }
     }
-  }, [location.pathname, forms]);
+  }, [location.pathname, location.search, forms]);
 
   const handleStartNewResponse = () => {
     if (currentForm?.settings.limitOneResponse && submittedEmail) {
@@ -510,8 +520,8 @@ What is your Age Range? 15-19 years, 20-24 years, 25-29 years"
                   >
                     Submit Form
                   </button>
-                  {/* Only show Share button for form creator */}
-                  {currentForm && !window.location.search.includes('view=preview') && (
+                  {/* Only show Share button for form creator, not for respondents */}
+                  {currentForm && !window.location.search.includes('view=preview') && !window.location.search.includes('respondent=true') && (
                     <button
                       type="button"
                       onClick={() => setShowShareModal(true)}

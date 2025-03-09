@@ -1,3 +1,14 @@
+
+/* Hide builder UI when in respondent view */
+.respondent-view .p-6 > div:first-child {
+  display: none !important;
+}
+
+/* Add some spacing at the top when in respondent view */
+.respondent-view .p-6 {
+  padding-top: 2rem;
+}
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
