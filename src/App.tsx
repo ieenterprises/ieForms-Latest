@@ -324,7 +324,13 @@ function App() {
                   <SettingsIcon className="w-4 h-4" />
                   Settings
                 </button>
-
+                <button
+                  onClick={() => setShowShareModal(true)}
+                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
+                >
+                  <Share2 className="w-4 h-4" />
+                  Share
+                </button>
               </div>
             )}
           </div>
@@ -521,17 +527,6 @@ What is your Age Range? 15-19 years, 20-24 years, 25-29 years"
                   >
                     Submit Form
                   </button>
-                  {/* Only show Share button for form creator, not for respondents */}
-                  {currentForm && !window.location.search.includes('view=preview') && !window.location.search.includes('respondent=true') && (
-                    <button
-                      type="button"
-                      onClick={() => setShowShareModal(true)}
-                      className="flex-none bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
-                    >
-                      <Share2 className="w-4 h-4" />
-                      Share
-                    </button>
-                  )}
                 </div>
               </form>
 
