@@ -1,6 +1,6 @@
 
 import React, { useState } from 'react';
-import { X, Link, Code } from 'lucide-react';
+import { X, Link, Code, Copy, Check } from 'lucide-react';
 
 interface ShareModalProps {
   formId: string;
@@ -15,15 +15,20 @@ export function ShareModal({ formId, onClose }: ShareModalProps) {
   const embedCode = `<iframe src="${previewUrl}" width="100%" height="600" frameborder="0" allow="clipboard-write"></iframe>`;
 
   const copyToClipboard = async (text: string, type: 'link' | 'embed') => {
-    await navigator.clipboard.writeText(text);
-    setCopied(type);
-    setTimeout(() => setCopied(null), 2000);
+    try {
+      await navigator.clipboard.writeText(text);
+      setCopied(type);
+      setTimeout(() => setCopied(null), 2000);
+    } catch (err) {
+      console.error('Failed to copy:', err);
+      alert('Failed to copy to clipboard. Please try again or copy manually.');
+    }
   };
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-      <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4">
-        <div className="flex justify-between items-center mb-4">
+      <div className="bg-white rounded-lg p-6 max-w-lg w-full mx-4 shadow-xl">
+        <div className="flex justify-between items-center mb-6">
           <h2 className="text-xl font-semibold">Share Form</h2>
           <button
             onClick={onClose}
@@ -33,25 +38,34 @@ export function ShareModal({ formId, onClose }: ShareModalProps) {
           </button>
         </div>
 
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              Form for respondents to fill out
+              Share link
             </label>
-            <p className="text-sm text-gray-500 mb-2">Share this link with people who need to fill out your form</p>
-            <div className="flex gap-2">
+            <p className="text-sm text-gray-500 mb-2">Anyone with this link can view and fill out this form</p>
+            <div className="flex items-center gap-2 border rounded-md overflow-hidden">
               <input
                 type="text"
                 value={previewUrl}
                 readOnly
-                className="flex-1 px-3 py-2 border rounded-md bg-gray-50"
+                className="flex-1 px-3 py-2 focus:outline-none text-gray-700"
               />
               <button
                 onClick={() => copyToClipboard(previewUrl, 'link')}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
+                className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors h-full flex items-center gap-2"
               >
-                <Link className="w-4 h-4" />
-                {copied === 'link' ? 'Copied!' : 'Copy'}
+                {copied === 'link' ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    Copied
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    Copy
+                  </>
+                )}
               </button>
             </div>
           </div>
@@ -61,21 +75,35 @@ export function ShareModal({ formId, onClose }: ShareModalProps) {
               Embed on your website
             </label>
             <p className="text-sm text-gray-500 mb-2">Add this code to your HTML to embed the form</p>
-            <div className="flex gap-2">
-              <input
-                type="text"
-                value={embedCode}
-                readOnly
-                className="flex-1 px-3 py-2 border rounded-md bg-gray-50 font-mono text-sm"
-              />
-              <button
-                onClick={() => copyToClipboard(embedCode, 'embed')}
-                className="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors flex items-center gap-2"
-              >
-                <Code className="w-4 h-4" />
-                {copied === 'embed' ? 'Copied!' : 'Copy'}
-              </button>
+            <div className="border rounded-md overflow-hidden">
+              <div className="px-3 py-2 bg-gray-50 font-mono text-sm text-gray-700 max-h-24 overflow-y-auto">
+                {embedCode}
+              </div>
+              <div className="border-t flex justify-end">
+                <button
+                  onClick={() => copyToClipboard(embedCode, 'embed')}
+                  className="px-4 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 transition-colors flex items-center gap-2"
+                >
+                  {copied === 'embed' ? (
+                    <>
+                      <Check className="w-4 h-4" />
+                      Copied
+                    </>
+                  ) : (
+                    <>
+                      <Copy className="w-4 h-4" />
+                      Copy HTML
+                    </>
+                  )}
+                </button>
+              </div>
             </div>
+          </div>
+
+          <div className="border-t pt-4 mt-4">
+            <p className="text-sm text-gray-500">
+              Anyone who has the link can access and submit responses to your form
+            </p>
           </div>
         </div>
       </div>
