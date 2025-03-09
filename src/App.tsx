@@ -34,6 +34,22 @@ function App() {
   const [draggedQuestionIndex, setDraggedQuestionIndex] = useState<number | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string>('');
   const [hasSubmitted, setHasSubmitted] = useState(false);
+  
+  // Handle URL parameters for shared forms
+  useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    const viewParam = urlParams.get('view');
+    const formIdParam = urlParams.get('formId');
+    
+    if (viewParam === 'preview' && formIdParam) {
+      const foundForm = forms.find(form => form.id === formIdParam);
+      if (foundForm) {
+        setCurrentForm(foundForm);
+        setView('preview');
+        setResponses({});
+      }
+    }
+  }, [forms]);
 
   useEffect(() => {
     localStorage.setItem('forms', JSON.stringify(forms));
