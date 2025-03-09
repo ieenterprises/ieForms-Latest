@@ -9,6 +9,7 @@ import { Analytics } from './components/Analytics';
 import { Settings } from './components/Settings';
 import { FileText, Send, Plus, Share2, PencilLine, Eye, BarChart, ArrowLeft, Trash2, Settings as SettingsIcon, CheckCircle, XCircle } from 'lucide-react';
 import { ErrorBoundary } from './components/ErrorBoundary';
+import { useLocation, useNavigate } from 'react-router-dom';
 import './styles/theme.css';
 
 // Default theme settings
@@ -35,9 +36,12 @@ function App() {
   const [submittedEmail, setSubmittedEmail] = useState<string>('');
   const [hasSubmitted, setHasSubmitted] = useState(false);
   
+  const location = useLocation();
+  const navigate = useNavigate();
+  
   // Handle URL parameters for shared forms
   useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
+    const urlParams = new URLSearchParams(location.search);
     const viewParam = urlParams.get('view');
     const formIdParam = urlParams.get('formId');
     
@@ -49,7 +53,7 @@ function App() {
         setResponses({});
       }
     }
-  }, [forms]);
+  }, [location, forms]);
 
   useEffect(() => {
     localStorage.setItem('forms', JSON.stringify(forms));
@@ -212,6 +216,22 @@ function App() {
     setView('preview');
   };
 
+  // Handle form routes for shared links
+  useEffect(() => {
+    const path = location.pathname;
+    if (path.startsWith('/form/')) {
+      const formId = path.split('/')[2];
+      if (formId) {
+        const foundForm = forms.find(form => form.id === formId);
+        if (foundForm) {
+          setCurrentForm(foundForm);
+          setView('preview');
+          setResponses({});
+        }
+      }
+    }
+  }, [location.pathname, forms]);
+
   const handleStartNewResponse = () => {
     if (currentForm?.settings.limitOneResponse && submittedEmail) {
       if (checkPreviousSubmission(submittedEmail)) {
@@ -293,13 +313,7 @@ function App() {
                   <SettingsIcon className="w-4 h-4" />
                   Settings
                 </button>
-                <button
-                  onClick={() => setShowShareModal(true)}
-                  className="px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
-                >
-                  <Share2 className="w-4 h-4" />
-                  Share
-                </button>
+                
               </div>
             )}
           </div>
@@ -496,6 +510,17 @@ What is your Age Range? 15-19 years, 20-24 years, 25-29 years"
                   >
                     Submit Form
                   </button>
+                  {/* Only show Share button for form creator */}
+                  {currentForm && !window.location.search.includes('view=preview') && (
+                    <button
+                      type="button"
+                      onClick={() => setShowShareModal(true)}
+                      className="flex-none bg-green-500 text-white py-2 px-4 rounded-md hover:bg-green-600 transition-colors flex items-center gap-2"
+                    >
+                      <Share2 className="w-4 h-4" />
+                      Share
+                    </button>
+                  )}
                 </div>
               </form>
 

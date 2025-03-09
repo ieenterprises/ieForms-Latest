@@ -9,7 +9,7 @@ interface ShareModalProps {
 export function ShareModal({ formId, onClose }: ShareModalProps) {
   const [copied, setCopied] = useState<'link' | 'embed' | null>(null);
   
-  const formUrl = `${window.location.origin}?view=preview&formId=${formId}`;
+  const formUrl = `${window.location.origin}/form/${formId}`;
   const embedCode = `<iframe src="${formUrl}" width="100%" height="600" frameborder="0" allow="clipboard-write"></iframe>`;
 
   const copyToClipboard = async (text: string, type: 'link' | 'embed') => {
