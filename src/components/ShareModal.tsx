@@ -10,7 +10,7 @@ export function ShareModal({ formId, onClose }: ShareModalProps) {
   const [copied, setCopied] = useState<'link' | 'embed' | null>(null);
 
   const formUrl = `${window.location.origin}/form/${formId}`;
-  const previewUrl = `${window.location.origin}/form/${formId}/preview`; // Assumed preview URL
+  const previewUrl = `${window.location.origin}/form/${formId}?respondent=true`;
   const embedCode = `<iframe src="${formUrl}" width="100%" height="600" frameborder="0" allow="clipboard-write"></iframe>`;
 
   const copyToClipboard = async (text: string, type: 'link' | 'embed') => {

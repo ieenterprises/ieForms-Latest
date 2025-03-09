@@ -35,17 +35,17 @@ function App() {
   const [draggedQuestionIndex, setDraggedQuestionIndex] = useState<number | null>(null);
   const [submittedEmail, setSubmittedEmail] = useState<string>('');
   const [hasSubmitted, setHasSubmitted] = useState(false);
-  
+
   const location = useLocation();
   const navigate = useNavigate();
-  
+
   // Handle URL parameters for shared forms
   useEffect(() => {
     const urlParams = new URLSearchParams(location.search);
     const viewParam = urlParams.get('view');
     const formIdParam = urlParams.get('formId');
     const isRespondent = urlParams.get('respondent') === 'true';
-    
+
     if ((viewParam === 'preview' || isRespondent) && formIdParam) {
       const foundForm = forms.find(form => form.id === formIdParam);
       if (foundForm) {
@@ -228,12 +228,13 @@ function App() {
           setCurrentForm(foundForm);
           setView('preview');
           setResponses({});
-          
+
           // If this is a respondent view, hide the header UI
           const isRespondent = location.search.includes('respondent=true');
           if (isRespondent) {
             // We're in respondent mode - form filling only
             document.body.classList.add('respondent-view');
+            setView('preview'); // Ensure we're in preview mode
           } else {
             document.body.classList.remove('respondent-view');
           }
@@ -323,7 +324,7 @@ function App() {
                   <SettingsIcon className="w-4 h-4" />
                   Settings
                 </button>
-                
+
               </div>
             )}
           </div>
