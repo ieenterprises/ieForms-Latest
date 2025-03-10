@@ -148,14 +148,19 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
 
   return (
     <div className="max-w-4xl mx-auto">
-      <div className="flex items-center mb-6">
-        <button
-          onClick={() => navigate('/')}
-          className="p-2 hover:bg-gray-100 rounded-full transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5" />
+      <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center">
+          <button
+            onClick={() => navigate('/')}
+            className="p-2 hover:bg-gray-100 rounded-full transition-colors"
+          >
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <h1 className="text-2xl font-bold ml-2">Preview Form</h1>
+        </div>
+        <button onClick={handleShare} className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center">
+          <Send className="h-4 w-4 mr-2"/> Share
         </button>
-        <h1 className="text-2xl font-bold ml-2">Preview Form</h1>
       </div>
 
       <div 
@@ -260,15 +265,12 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
             </div>
           )}
 
-          <div className="flex space-x-4">
+          <div className="flex">
             <button
               type="submit"
-              className="flex-1 text-white py-2 px-4 rounded-md transition-colors"
+              className="w-full text-white py-2 px-4 rounded-md transition-colors"
             >
               Submit Form
-            </button>
-            <button onClick={handleShare} className="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-              <Send className="h-5 w-5 inline mr-2"/> Share
             </button>
           </div>
         </form>
