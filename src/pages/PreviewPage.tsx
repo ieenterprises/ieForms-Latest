@@ -1,10 +1,9 @@
-
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { FormResponse, FormData } from '../types/form';
 import { FormField } from '../components/FormField';
 import { calculateProgress } from '../utils/progressCalculator';
-import { CheckCircle, XCircle, ArrowLeft } from 'lucide-react';
+import { CheckCircle, XCircle, ArrowLeft, Send } from 'lucide-react';
 
 interface PreviewPageProps {
   forms: FormData[];
@@ -17,9 +16,9 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
   const [submittedEmail, setSubmittedEmail] = useState<string>('');
   const { formId } = useParams();
   const navigate = useNavigate();
-  
+
   const currentForm = forms.find(form => form.id === formId);
-  
+
   if (!currentForm) {
     return <div className="p-6">Form not found</div>;
   }
@@ -65,7 +64,7 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
       ...currentForm,
       responses: [...currentForm.responses, newResponse]
     };
-    
+
     setForms(prev => prev.map(form => form.id === formId ? updatedForm : form));
 
     // Store the submitted email for checking future submissions
@@ -88,6 +87,20 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
     setHasSubmitted(false);
   };
 
+  const handleShare = () => {
+    // Implement share functionality here.  This is a placeholder.
+    //  You would likely use a library to create a shareable link.
+    const url = window.location.href;
+    navigator.share({
+      title: currentForm.title,
+      url: url,
+    })
+    .then(() => console.log('Successful share'))
+    .catch(error => console.error('Error sharing', error));
+
+  };
+
+
   if (hasSubmitted) {
     return (
       <div className={`
@@ -105,7 +118,7 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
           </button>
           <h1 className="text-2xl font-bold ml-2">Confirmation</h1>
         </div>
-        
+
         <div className="flex flex-col items-center justify-center py-8">
           <CheckCircle className="w-16 h-16 text-green-500 mb-4" />
           <h2 className="text-2xl font-bold mb-4">Thank You!</h2>
@@ -144,7 +157,7 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
         </button>
         <h1 className="text-2xl font-bold ml-2">Preview Form</h1>
       </div>
-      
+
       <div 
         className={`
           themed-form rounded-lg shadow-md p-6
@@ -200,7 +213,6 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
           className="space-y-6"
           autoSave={currentForm.settings.disableAutosave ? 'off' : 'on'}
         >
-          {/* Shuffle questions if enabled */}
           {(currentForm.settings.shuffleQuestions 
             ? [...currentForm.questions].sort(() => Math.random() - 0.5) 
             : currentForm.questions
@@ -209,8 +221,6 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
               <label className="block text-sm font-medium">
                 {question.question}
                 {question.required && <span className="text-red-500 ml-1">*</span>}
-
-                {/* Show points if this is a quiz */}
                 {currentForm.settings.isQuiz && question.points && (
                   <span className="ml-2 text-xs bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded-full">
                     {question.points} {question.points === 1 ? 'point' : 'points'}
@@ -230,7 +240,6 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
             </div>
           ))}
 
-          {/* Add email collection if enabled */}
           {currentForm.settings.emailCollection !== 'do_not_collect' && (
             <div className="space-y-2">
               <label className="block text-sm font-medium">
@@ -258,10 +267,12 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
             >
               Submit Form
             </button>
+            <button onClick={handleShare} className="flex-1 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+              <Send className="h-5 w-5 inline mr-2"/> Share
+            </button>
           </div>
         </form>
 
-        {/* Show custom footer if present */}
         {currentForm.settings.theme.customFooter && (
           <div 
             className="mt-6"
