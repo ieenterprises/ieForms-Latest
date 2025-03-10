@@ -4,6 +4,13 @@
   display: none !important;
 }
 
+/* Hide navigation controls in respondent mode */
+.respondent-view .respondent-controls {
+  display: none !important;
+}
+
+
+
 /* Add some spacing at the top when in respondent view */
 .respondent-view .p-6 {
   padding-top: 2rem;

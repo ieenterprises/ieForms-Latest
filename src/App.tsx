@@ -266,6 +266,7 @@ function App() {
             <Route path="/preview/:formId" element={<PreviewPage forms={forms} setForms={setForms} />} />
             <Route path="/analytics/:formId" element={<AnalyticsPage forms={forms} />} />
             <Route path="/settings/:formId" element={<SettingsPage forms={forms} setForms={setForms} />} />
+            <Route path="/form/:formId" element={<PreviewPage forms={forms} setForms={setForms} />} />
           </Routes>
         </div>
       </div>
