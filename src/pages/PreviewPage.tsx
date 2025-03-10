@@ -87,17 +87,19 @@ export const PreviewPage: React.FC<PreviewPageProps> = ({ forms, setForms }) => 
     setHasSubmitted(false);
   };
 
-  const handleShare = () => {
-    // Implement share functionality here.  This is a placeholder.
-    //  You would likely use a library to create a shareable link.
-    const url = window.location.href;
-    navigator.share({
-      title: currentForm.title,
-      url: url,
-    })
-    .then(() => console.log('Successful share'))
-    .catch(error => console.error('Error sharing', error));
+  const handleShare = async () => {
+    if (!currentForm) return;
 
+    try {
+      // Create a shareable URL for this form with respondent parameter
+      const shareableUrl = `${window.location.origin}/form/${currentForm.id}?respondent=true`;
+
+      await navigator.clipboard.writeText(shareableUrl);
+      alert('Form link copied to clipboard!');
+    } catch (error) {
+      console.error('Error sharing', error);
+      alert('Failed to copy the link. Please try again.');
+    }
   };
 
 
